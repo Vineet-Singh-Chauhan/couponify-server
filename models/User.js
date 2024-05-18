@@ -28,12 +28,17 @@ const UserSchema = new Schema(
           price: Number,
         },
       ],
-      value: { type: Number, default: 0 },
     },
   },
   {
     timestamps: true,
   }
 );
+UserSchema.virtual("cart.value").get(function () {
+  return this.cart.items.reduce(
+    (acc, curr) => acc + curr.price * curr.quantity,
+    0
+  );
+});
 
 module.exports = mongoose.model("User", UserSchema);

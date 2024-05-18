@@ -2,38 +2,7 @@ const User = require("../models/User");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-exports.handleLogin = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password)
-    return res
-      .status(400)
-      .json({ message: "Email and password are required !" });
-
-  const foundUser = await User.findOne({ email }).exec();
-
-  if (!foundUser) {
-    return res.status(400).json({ message: "No user with this email!" });
-  }
-
-  const isAuthenticated = await bcryptjs.compare(password, foundUser.password);
-
-  if (!isAuthenticated) {
-    return res.status(400).json({ message: "Enter valid email and password!" });
-  }
-
-  const payload = {
-    email: foundUser.email,
-    userType: foundUser.userType,
-  };
-  const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_LIFE,
-  });
-
-  res.json({ username: foundUser.username, accessToken });
-};
-
-exports.handleSignup = async (req, res) => {
+exports.handleCreate = async (req, res) => {
   const { username, email, password, userType } = req.body;
 
   if (!username || !email || !password) {
@@ -65,6 +34,37 @@ exports.handleSignup = async (req, res) => {
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
+};
+
+exports.handleLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return res
+      .status(400)
+      .json({ message: "Email and password are required !" });
+
+  const foundUser = await User.findOne({ email }).exec();
+
+  if (!foundUser) {
+    return res.status(400).json({ message: "No user with this email!" });
+  }
+
+  const isAuthenticated = await bcryptjs.compare(password, foundUser.password);
+
+  if (!isAuthenticated) {
+    return res.status(400).json({ message: "Enter valid email and password!" });
+  }
+
+  const payload = {
+    email: foundUser.email,
+    userType: foundUser.userType,
+  };
+  const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: process.env.ACCESS_TOKEN_LIFE,
+  });
+
+  res.json({ username: foundUser.username, accessToken });
 };
 
 exports.handleLogout = async (req, res) => {
