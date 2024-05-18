@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 
 const mongoose = require("mongoose");
 const connectDB = require("./config/db");
+const verifyUserRoles = require("./middlewares/verifyUserRoles");
 
 connectDB();
 
@@ -14,6 +15,10 @@ app.use(express.json());
 const db = mongoose.connection;
 
 app.use("/user", require("./routes/user"));
+
+// protected routes
+app.use(verifyUserRoles);
+app.use("/cart", require("./routes/cart"));
 
 db.on("open", () => {
   console.log("Connected to database");
