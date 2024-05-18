@@ -8,10 +8,12 @@ const connectDB = require("./config/db");
 
 connectDB();
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const db = mongoose.connection;
+
+app.use("/user", require("./routes/user"));
 
 db.on("open", () => {
   console.log("Connected to database");
