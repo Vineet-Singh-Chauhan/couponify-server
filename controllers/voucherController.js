@@ -32,7 +32,7 @@ exports.handleCreate = async (req, res) => {
       endsOn,
       owner: req.email,
       amount,
-      type,
+      value: { type, amount },
       validDays,
       validCategories,
       maxRedeemCount,
@@ -41,7 +41,7 @@ exports.handleCreate = async (req, res) => {
       maxCappedDiscount,
       redeemedCount,
       minApplicableAmount,
-    }).exec();
+    });
     res.status(201).json({
       message: "Voucher created successfully",
       voucherId: result._id,
@@ -63,9 +63,9 @@ exports.handleGetAll = async (req, res) => {
 };
 
 exports.handleGetDetails = async (req, res) => {
-  const expression = req.body.expression;
+  const expression = req.params.expression;
   try {
-    const voucher = await Voucher.findOne({ expression });
+    const voucher = await Voucher.findOne({ expression: expression });
     res.status(200).json({ voucher });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -73,7 +73,7 @@ exports.handleGetDetails = async (req, res) => {
 };
 
 exports.handleDelete = async (req, res) => {
-  const expression = req.body.expression;
+  const expression = req.params.expression;
   try {
     await Voucher.findOneAndDelete({ expression });
     res.status(204).json({ message: "deleted successfully" });
@@ -96,6 +96,10 @@ exports.handleUpdate = async (req, res) => {
         new: true,
       }
     ).exec();
+    if (!result)
+      return res.status(404).json({
+        message: "Voucher not found ",
+      });
     res.status(200).json({
       message: "Voucher updated successfully",
       voucher: result,

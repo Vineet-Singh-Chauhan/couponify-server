@@ -5,16 +5,15 @@ const VoucherSchema = new Schema(
   {
     expression: { type: String, required: true, unique: true },
     startsOn: { type: Date, required: true },
-    endsOn: { type: Date, required: true },
+    endsOn: { type: Date },
     owner: { type: String, required: true },
     value: {
       type: {
         type: String,
-        enum: ["amount", "percent", "fixed", "shipping", "upto"],
+        enum: ["fixedAmount", "fixedPercent", "uptoAmount", "uptoPercent", "shipping"],
         required: true,
       },
       amount: { type: Number, required: true },
-      required: true,
     },
     maxRedeemCountPerUser: Number,
     maxCappedDiscount: Number,
@@ -36,7 +35,7 @@ const VoucherSchema = new Schema(
     maxRedeemCount: Number,
     minApplicableAmount: Number,
     applyTo: {
-      type: Sring,
+      type: String,
       enum: ["wholeCart", "items"],
       default: "wholeCart",
     },
