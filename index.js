@@ -19,7 +19,7 @@ app.use("/user", require("./routes/user"));
 // protected routes
 app.use(verifyUserRoles);
 app.use("/cart", require("./routes/cart"));
-
+app.use("/voucher/",require("./routes/voucher"));
 db.on("open", () => {
   console.log("Connected to database");
   app.listen(PORT, () => {
