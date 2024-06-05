@@ -9,7 +9,6 @@ const orderSchema = new Schema(
       addressLine: String,
       city: String,
       state: String,
-      required: true,
     },
     items: [
       {
@@ -19,11 +18,18 @@ const orderSchema = new Schema(
         price: Number,
       },
     ],
-    value: { type: Number, default: 0 },
+    voucherUsed: String,
+    shippingCharge: { type: Number, required: true },
+    discountAmount: { type: Number, default: 0 },
   },
   {
     timestamps: true,
   }
 );
-
+orderSchema.virtual("value").get(function () {
+  return this.items.reduce((acc, curr) => acc + curr.price * curr.quantity, 0);
+});
+orderSchema.virtual("payable").get(function () {
+  return this.value - this.discountAmount + this.shippingCharge;
+});
 module.exports = mongoose.model("Order", orderSchema);
