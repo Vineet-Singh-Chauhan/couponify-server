@@ -18,3 +18,4 @@ Couponify! : a service to handle and manage coupons and vouchers for your busine
 - run `npm run dev` to run the application locally
 
 ## UML Diagram:
+![png Image](https://github.com/Vineet-Singh-Chauhan/couponify-server/assets/94364597/86af00fb-724b-4d23-9604-0f259e92e42e)
