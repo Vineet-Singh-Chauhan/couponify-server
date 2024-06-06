@@ -95,6 +95,8 @@ exports.handleCreate = async (req, res) => {
   const { voucherUsed } = req.body;
   try {
     const voucher = await Voucher.findOne({ expression: voucherUsed });
+    if (!voucher)
+      return res.status(400).json({ message: "Invalid voucher used" });
     const user = await User.findOne({ email: userEmail });
     const isVoucherApplicable = await isVoucherValid(
       voucher,
@@ -120,7 +122,8 @@ exports.handleCreate = async (req, res) => {
       }
     );
 
-    let shippingCharge = 100;
+    let shippingCharge = 100; // coming from some other service
+    
     if (voucher.value.type == "shipping") shippingCharge = 0;
     const result = await Order.create({
       userId: user._id,
