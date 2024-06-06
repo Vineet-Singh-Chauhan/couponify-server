@@ -41,7 +41,10 @@ const isVoucherValid = async (voucher, userId, value) => {
   if (voucher.maxRedeemCount && redeemedCount >= voucher.maxRedeemCount)
     return { status: false, message: "max voucher limit reached " };
   // valid days
-  if (voucher.validDays && !voucher.validDays.includes(dayMap[today.getDay()]))
+  if (
+    voucher.validDays.length != 0 &&
+    !voucher.validDays.includes(dayMap[today.getDay()])
+  )
     return { status: false, message: "voucher not applicable  for the day" };
   // min applicable amount
   if (voucher.minApplicableAmount && value < voucher.minApplicableAmount)
@@ -123,7 +126,7 @@ exports.handleCreate = async (req, res) => {
     );
 
     let shippingCharge = 100; // coming from some other service
-    
+
     if (voucher.value.type == "shipping") shippingCharge = 0;
     const result = await Order.create({
       userId: user._id,
