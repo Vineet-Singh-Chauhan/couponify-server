@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
+const { USER_TYPES } = require("../config/constants");
 const { Schema } = mongoose;
-const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const UserSchema = new Schema(
   {
@@ -9,7 +9,7 @@ const UserSchema = new Schema(
     password: { type: String, required: true },
     userType: {
       type: String,
-      enum: ["user", "admin"],
+      enum: USER_TYPES,
       default: "user",
     },
     addresses: [

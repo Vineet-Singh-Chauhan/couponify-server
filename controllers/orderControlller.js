@@ -1,15 +1,7 @@
+const { DAY_MAP } = require("../config/constants");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Voucher = require("../models/Voucher");
-const dayMap = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednessday",
-  "thursday",
-  "friday",
-  "saturday",
-];
 
 const isVoucherValid = async (voucher, userId, value) => {
   // check for date range
@@ -43,7 +35,7 @@ const isVoucherValid = async (voucher, userId, value) => {
   // valid days
   if (
     voucher.validDays.length != 0 &&
-    !voucher.validDays.includes(dayMap[today.getDay()])
+    !voucher.validDays.includes(DAY_MAP[today.getDay()])
   )
     return { status: false, message: "voucher not applicable  for the day" };
   // min applicable amount

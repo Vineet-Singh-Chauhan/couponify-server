@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DISCOUNT_TYPES, DAY_MAP } = require("../config/constants");
 const { Schema } = mongoose;
 
 const VoucherSchema = new Schema(
@@ -10,7 +11,7 @@ const VoucherSchema = new Schema(
     value: {
       type: {
         type: String,
-        enum: ["fixedAmount", "fixedPercent", "uptoAmount", "uptoPercent", "shipping"],
+        enum: DISCOUNT_TYPES,
         required: true,
       },
       amount: { type: Number, required: true },
@@ -20,15 +21,7 @@ const VoucherSchema = new Schema(
     validDays: [
       {
         type: String,
-        enum: [
-          "monday",
-          "tuesday",
-          "wednessday",
-          "thursday",
-          "friday",
-          "saturday",
-          "sunday",
-        ],
+        enum: DAY_MAP,
       },
     ],
     validCategories: [String],
@@ -36,7 +29,7 @@ const VoucherSchema = new Schema(
     minApplicableAmount: Number,
     applyTo: {
       type: String,
-      enum: ["wholeCart", "items"],
+      enum: APPLY_TO_TYPES,
       default: "wholeCart",
     },
     redeemedCount: {
